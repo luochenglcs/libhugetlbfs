@@ -8,24 +8,35 @@ on:
     
 permissions:
    contents: read
-  
+   
 jobs:
-  build:
-    runs-on: ubuntu-20.04 | ubuntu-lastest
-    
+  build-on-ubuntu-20.04:
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
-    
     - name: Run make
       run: make BUILDTYPE=NATIVEONLY V=1
-
     - name: Configure Huge Pages
       run:  |
             sudo mkdir -p /mnt/huge
             sudo mount -t hugetlbfs -o pagesize=2MB none /mnt/huge
             echo "vm.nr_hugepages = 1024" | sudo tee -a /etc/sysctl.conf
             sudo sysctl -p
+    - name: Run checks
+      run:  sudo make BUILDTYPE=NATIVEONLY V=1 check
 
+  build-on-ubuntu-latest:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run make
+      run: make BUILDTYPE=NATIVEONLY V=1
+    - name: Configure Huge Pages
+      run:  |
+            sudo mkdir -p /mnt/huge
+            sudo mount -t hugetlbfs -o pagesize=2MB none /mnt/huge
+            echo "vm.nr_hugepages = 1024" | sudo tee -a /etc/sysctl.conf
+            sudo sysctl -p
     - name: Run checks
       run:  sudo make BUILDTYPE=NATIVEONLY V=1 check
            
