@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
+    - name: configue
+      run: ./autogen.sh && ./configure
     - name: Run make
       run: make BUILDTYPE=NATIVEONLY V=1
     - name: Configure Huge Pages
@@ -29,6 +31,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: configue
+      run: ./autogen.sh && ./configure
     - name: Run make
       run: make BUILDTYPE=NATIVEONLY V=1
     - name: Configure Huge Pages
