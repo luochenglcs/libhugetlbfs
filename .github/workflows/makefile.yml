@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Make-and-check CI
 
 on:
   push:
