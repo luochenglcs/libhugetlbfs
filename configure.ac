@@ -54,7 +54,7 @@ AC_COMPILE_IFELSE(
 	#include <malloc.h>
 	void * morecore_exists() { return &__morecore; }]])],
 	[ AC_MSG_RESULT([yes])
-       		CFLAGS += -DHAS_MORECORE],
+       		CFLAGS+=-DHAS_MORECORE],
 	[ AC_MSG_RESULT([no])]
 )
 
