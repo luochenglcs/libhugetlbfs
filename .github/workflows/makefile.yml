@@ -29,7 +29,8 @@ jobs:
             sudo make BUILDTYPE=NATIVEONLY check | grep "FAIL:" > check_result
             cat check_result
             total_fail_count=0
-            while readline; do
+            while read line; do
+              echo "$line"
               fail_count=$(echo "$line" | awk '{print $NF}')
               total_fail_count=$((total_fail_count + fail_count))
             done < check_result
