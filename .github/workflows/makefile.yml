@@ -17,7 +17,7 @@ jobs:
     - name: configue
       run: ./autogen.sh && ./configure
     - name: Run make
-      run: make BUILDTYPE=NATIVEONLY V=1
+      run: make BUILDTYPE=NATIVEONLY
     - name: Configure Huge Pages
       run:  |
             sudo mkdir -p /mnt/huge
@@ -25,7 +25,7 @@ jobs:
             echo "vm.nr_hugepages = 1024" | sudo tee -a /etc/sysctl.conf
             sudo sysctl -p
     - name: Run checks
-      run:  sudo make BUILDTYPE=NATIVEONLY V=1 check
+      run:  sudo make BUILDTYPE=NATIVEONLY check | grep "FAIL:     0      0"
 
   build-on-ubuntu-latest:
     runs-on: ubuntu-latest
