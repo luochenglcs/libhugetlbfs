@@ -14,7 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: make patch
-      run: git format-patch -1
+      run: |
+           git format-patch -1
+           ls -la *.patch
     - name: Run checkpatch
       run: |
            CHECKPATCH_SCRIPT="checkpatch.pl"
