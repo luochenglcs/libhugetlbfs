@@ -29,13 +29,11 @@ jobs:
             sudo make BUILDTYPE=NATIVEONLY check | grep "FAIL:" > check_result
             cat check_result
             total_fail_count=0
-            cat check_result | while read -r line; do
-              echo 1 $line
+            while readline; do
               fail_count=$(echo "$line" | awk '{print $NF}')
-              echo 2 $fail_count
               total_fail_count=$((total_fail_count + fail_count))
-              echo 3 $total_fail_count
-            done
+            done < check_result
+            rm -rf check_result
             echo $total_fail_count
             test $total_fail_count == 0 || exit 1
 
