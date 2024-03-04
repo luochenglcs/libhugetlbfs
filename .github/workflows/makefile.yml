@@ -25,7 +25,9 @@ jobs:
             echo "vm.nr_hugepages = 1024" | sudo tee -a /etc/sysctl.conf
             sudo sysctl -p
     - name: Run checks
-      run:  sudo make BUILDTYPE=NATIVEONLY check | grep "FAIL:     0      0"
+      run:  |
+            sudo make BUILDTYPE=NATIVEONLY check | grep "FAIL:     0      0"
+            $? || exit 1
 
   build-on-ubuntu-latest:
     runs-on: ubuntu-latest
