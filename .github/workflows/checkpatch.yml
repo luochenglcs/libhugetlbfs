@@ -13,11 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
-        fetch-depth: 0
     - name: make patch
-      run: git format-patch -${{ github.event.pull_request.commits }}
+      run: git format-patch -1
     - name: Run checkpatch
       run: |
            git format-patch 
