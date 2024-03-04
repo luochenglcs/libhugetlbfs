@@ -27,6 +27,7 @@ jobs:
     - name: Run checks
       run:  |
             sudo make BUILDTYPE=NATIVEONLY check | grep "FAIL:" > check_result
+            cat check_result
             total_fail_count=0
             while read -r line; do
               fail_count=$(echo "$line" | awk '{print $NF}')
