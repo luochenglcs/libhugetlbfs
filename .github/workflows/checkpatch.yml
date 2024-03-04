@@ -1,0 +1,41 @@
+name: Checkpatch
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        fetch-depth: 0
+    - name: make patch
+      run: git format-patch -${{ github.event.pull_request.commits }}
+    - name: Run checkpatch
+      run: |
+           git format-patch 
+           CHECKPATCH_SCRIPT="checkpatch.pl"
+           SPELLING_TXT="spelling.txt"
+           CONST_STRUCTS_TXT="const_structs.checkpatch"
+  
+           KERNEL_RAW_URL="https://raw.githubusercontent.com/torvalds/linux/master"
+           CHECKPATCH_URL="${KERNEL_RAW_URL}/scripts/${CHECKPATCH_SCRIPT}"
+           SPELLING_URL="${KERNEL_RAW_URL}/scripts/${SPELLING_TXT}"
+           CONST_STRUCTS_URL="${KERNEL_RAW_URL}/scripts/${CONST_STRUCTS_TXT}"
+        
+           for download in "${CHECKPATCH_URL}:${CHECKPATCH_SCRIPT}" "${SPELLING_URL}:${SPELLING_TXT}" "${CONST_STRUCTS_URL}:${CONST_STRUCTS_TXT}"; do
+                  echo "Downloading '${download##*:}'..."
+                  curl -f "${download%:*}" -s -S -O || \
+                          exit 1
+           done
+
+           chmod 755 "${CHECKPATCH_SCRIPT}"
+           ./${CHECKPATCH_SCRIPT} *.patch
+           
