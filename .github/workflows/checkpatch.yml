@@ -17,7 +17,6 @@ jobs:
       run: git format-patch -1
     - name: Run checkpatch
       run: |
-           git format-patch 
            CHECKPATCH_SCRIPT="checkpatch.pl"
            SPELLING_TXT="spelling.txt"
            CONST_STRUCTS_TXT="const_structs.checkpatch"
