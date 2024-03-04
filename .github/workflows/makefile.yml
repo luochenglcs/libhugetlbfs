@@ -32,7 +32,8 @@ jobs:
               fail_count=$(echo "$line" | awk '{print $NF}')
               total_fail_count=$((total_fail_count + fail_count))
             done <<< check_result
-            total_fail_count || exit 1
+            echo $total_fail_count
+            test $total_fail_count == 0 || exit 1
 
   build-on-ubuntu-latest:
     runs-on: ubuntu-latest
