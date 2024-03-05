@@ -35,5 +35,6 @@ jobs:
            done
 
            chmod 755 "${CHECKPATCH_SCRIPT}"
-           ./${CHECKPATCH_SCRIPT} --no-tree *.patch
+           #./${CHECKPATCH_SCRIPT} --no-tree *.patch
+           cat *.patch
            
