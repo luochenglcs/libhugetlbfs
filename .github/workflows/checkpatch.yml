@@ -18,7 +18,6 @@ jobs:
     - name: make patch
       run: |
            git format-patch -1 --stdout > current-commit.patch
-           ls -la *.patch
     - name: Run checkpatch
       run: |
            CHECKPATCH_SCRIPT="checkpatch.pl"
@@ -37,6 +36,5 @@ jobs:
            done
 
            chmod 755 "${CHECKPATCH_SCRIPT}"
-           #./${CHECKPATCH_SCRIPT} --no-tree current-commit.patch
-           cat current-commit.patch
+           ./${CHECKPATCH_SCRIPT} --no-tree current-commit.patch
            
