@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+           fetch-depth: 0
     - name: make patch
       run: |
            git format-patch -1 --stdout > current-commit.patch
