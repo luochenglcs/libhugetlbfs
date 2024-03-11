@@ -40,16 +40,17 @@ int open(const char *path, int flags, ...)
 
 	if (strcmp(path, "/proc/meminfo") == 0) {
 		FILE *f;
-
-		f = popen("/bin/grep -vi ^hugepage /proc/meminfo", "r");
-		return fileno(f);
+		f = popen("/bin/grep -vi ^hugepage /proc/meminfo > meminfo", "r");
+		pclose(f);
+		path = "meminfo";
 	}
 
 	if (strcmp(path, "/proc/mounts") == 0) {
 		FILE *f;
 
-		f = popen("/bin/grep -vi hugetlbfs /proc/mounts", "r");
-		return fileno(f);
+		f = popen("/bin/grep -vi hugetlbfs /proc/mounts > mounts", "r");
+		pclose(f);
+		path = "mounts";
 	}
 
 	old_open = dlsym(RTLD_NEXT, "open");
@@ -65,6 +66,28 @@ int open(const char *path, int flags, ...)
 	}
 }
 
+FILE * setmntent(const char *path, const char *type)
+{
+        FILE * (*old_setmntent)(const char *, const char *);
+        FILE *f;
+
+        if (strcmp(path, "/proc/mounts") == 0) {
+                f = popen("/bin/grep -vi hugetlbfs /proc/mounts > mounts", "r");
+		pclose(f);
+		path = "mounts";
+        }
+
+        old_setmntent= dlsym(RTLD_NEXT, "setmntent");
+        f = (*old_setmntent)(path, type);
+
+        return f;
+}
+
+static __attribute__ ((destructor)) void meminfo_nohuge_destructor()
+{
+	remove("mounts");
+	remove("meminfo");
+}
 int main(int argc, char *argv[])
 {
 	long hpage_size;

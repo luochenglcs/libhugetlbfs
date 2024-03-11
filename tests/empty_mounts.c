@@ -55,6 +55,21 @@ int open(const char *path, int flags, ...)
 	}
 }
 
+FILE * setmntent(const char *path, const char *type)
+{
+        FILE * (*old_setmntent)(const char *, const char *);
+        FILE *f;
+
+        if ((strcmp(path, "/proc/mounts") == 0)
+            || (strcmp(path, "/etc/mtab") == 0))
+                path = "/dev/null";
+
+        old_setmntent= dlsym(RTLD_NEXT, "setmntent");
+        f = (*old_setmntent)(path, type);
+
+        return f;
+}
+
 int main(int argc, char *argv[])
 {
 	int fd;

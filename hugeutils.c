@@ -622,10 +622,13 @@ static void find_mounts(void)
 {
 	FILE *f;
 	struct mntent *mnt;
+	char *path;
 	char *fstype = "hugetlbfs";
 
+	//f = setmntent("/proc/mounts", "r");
 	f = fopen("/proc/mounts", "r");
 	if (!f) {
+	//	f = setmntent("/etc/mtab", "r");
 		f = fopen("/etc/mtab", "r");
 		if (!f) {
 			ERROR("Couldn't open /proc/mounts or /etc/mtab (%s)\n",
@@ -636,12 +639,13 @@ static void find_mounts(void)
 
 	while ((mnt = getmntent(f))) {
 		if (!strncmp(mnt->mnt_type, fstype, strlen(fstype))) {
-			if ((hugetlbfs_test_path(mnt->mnt_dir) == 1) &&
-			    !(access(mnt->mnt_dir, R_OK | W_OK | X_OK)))
-				add_hugetlbfs_mount(mnt->mnt_dir, 0);
+			path = strdup(mnt->mnt_dir);
+			if ((hugetlbfs_test_path(path) == 1) &&
+			    !(access(path, R_OK | W_OK | X_OK)))
+				add_hugetlbfs_mount(path, 0);
 		}
 	}
-	fclose(f);
+	endmntent(f);
 }
 
 void setup_mounts(void)
